@@ -58,12 +58,21 @@ def handle_invalid_values(df):
 def add_derived_variables(df):
     df = df.copy()
 
+    denominateur = df["quantity"] * (1 - df["discount"])
+    df["prix_unitaire"] = np.where((df["sales"].notna()) & (denominateur > 0),
+        df["sales"] / denominateur, np.nan)
+
+    prix_unitaire_par_produit = (df.groupby("product_id")["prix_unitaire"].transform("median"))
+    df["prix_unitaire"] = df["prix_unitaire"].fillna(prix_unitaire_par_produit)
+
+    sales_calcule = (df["prix_unitaire"] * df["quantity"] * (1 - df["discount"]))
+    df["sales"] = df["sales"].fillna(sales_calcule)
+
     df["deliverytime"] = (df["ship_date"] - df["order_date"]).dt.days
-    df["profit_margin"] = np.where(
-        df["sales"] != 0,
-        df["profit"] / df["sales"],
-        0.0,
-    )
+
+    df["profit_margin"] = ((df["profit"] / df["sales"])
+    .where(df["sales"].notna() & (df["sales"] != 0),
+        0.0))
     return df
 
 
