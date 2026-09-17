@@ -26,7 +26,7 @@ def remove_duplicates(df):
 
 def handle_missing_values(df):
     before = len(df)
-    df = df.dropna(subset=["row_id", "customer_id", "product_id", "order_id", "order_date"])
+    df = df.dropna(subset=["row_id", "customer_id", "product_id", "order_id", "order_date"]).copy()
     removed = before - len(df)
     print(f"[clean] {removed} ligne(s) supprimée(s) pour clés/dates manquantes obligatoires")
 
