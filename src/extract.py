@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy.engine import Engine
 
 COLUMN_MAPPING = {
     "Row ID": "row_id",
@@ -31,5 +32,28 @@ def read_source_csv(csv_path):
 
 def rename_columns_for_staging(df):
     return df.rename(columns=COLUMN_MAPPING)
+
+
+
+def load_to_staging(df, engine, table_name = "superstore_raw"):
+    df.to_sql(name=table_name, con=engine,
+        schema="staging",
+        if_exists="replace",
+        index=False)
+    return len(df)
+
+
+def extract_and_load(csv_path , engine):
+    df_raw = read_source_csv(csv_path)
+    df_renamed = rename_columns_for_staging(df_raw)
+    nb_lignes = load_to_staging(df_renamed, engine)
+    print(f"[extract] {nb_lignes} lignes chargées dans staging.superstore_raw")
+    return df_renamed
+
+# if __name__ == "__main__":
+#     from db import get_engine
+#
+#     engine = get_engine()
+#     extract_and_load("data/raw/Sample - Superstore.csv", engine)
 
 
