@@ -32,6 +32,7 @@ def handle_missing_values(df):
 
     df["postal_code"] = df["postal_code"].astype("object")
     df["postal_code"] = df["postal_code"].fillna("UNKNOWN")
+    df["customer_name"] = df["customer_name"].fillna("UNKNOWN")
 
     return df
 

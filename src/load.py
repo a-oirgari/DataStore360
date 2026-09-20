@@ -2,7 +2,7 @@ import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.engine import Engine
 
-from pseudonymize import pseudonymize_column
+from pseudonymize import pseudonymize_column, DEFAULT_SALT
 
 
 def build_customers_df(df):
@@ -11,7 +11,7 @@ def build_customers_df(df):
     customers = df[cols].drop_duplicates(subset=["customer_id"]).copy()
 
 
-    customers["customer_name"] = pseudonymize_column(customers["customer_name"])
+    customers["customer_name"] = pseudonymize_column(customers["customer_name"], DEFAULT_SALT)
 
     customers = customers.rename(columns={"customer_id": "customerid",
         "customer_name": "customername"})
