@@ -50,10 +50,10 @@ def extract_and_load(csv_path , engine):
     print(f"[extract] {nb_lignes} lignes chargées dans staging.superstore_raw")
     return df_renamed
 
-# if __name__ == "__main__":
-#     from db import get_engine
-#
-#     engine = get_engine()
-#     extract_and_load("data/raw/Sample - Superstore.csv", engine)
+if __name__ == "__main__":
+    from db import get_engine
+
+    engine = get_engine()
+    extract_and_load("data/raw/Sample - Superstore.csv", engine)
 
 
