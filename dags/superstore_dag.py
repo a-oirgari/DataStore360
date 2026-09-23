@@ -22,7 +22,7 @@ default_args = {
     dag_id="superstore_pipeline",
     description="Pipeline Superstore : extraction -> staging -> nettoyage RGPD -> core -> contrôle qualité",
     schedule=None,
-    start_date=datetime(2024, 1, 1),
+    start_date=datetime(2026, 9, 19),
     catchup=False,
     default_args=default_args,
     tags=["datastore360", "superstore", "etl"],
@@ -60,7 +60,7 @@ def superstore_pipeline():
         from db import get_engine
         from load import load_pipeline
 
-        df_clean = pd.read_csv(clean_path)
+        df_clean = pd.read_csv(clean_path, parse_dates=["order_date", "ship_date"])
         engine = get_engine()
         stats = load_pipeline(df_clean, engine)
         return stats
